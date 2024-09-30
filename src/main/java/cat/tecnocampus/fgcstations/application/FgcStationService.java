@@ -1,5 +1,6 @@
 package cat.tecnocampus.fgcstations.application;
 
+import cat.tecnocampus.fgcstations.application.DTOs.CStationDTO;
 import cat.tecnocampus.fgcstations.application.DTOs.StationDTO;
 import cat.tecnocampus.fgcstations.application.DTOs.StationTopFavoriteJourney;
 import cat.tecnocampus.fgcstations.application.exception.StationDoesNotExistsException;
@@ -8,7 +9,9 @@ import cat.tecnocampus.fgcstations.domain.Station;
 import cat.tecnocampus.fgcstations.persistence.StationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FgcStationService {
@@ -20,24 +23,31 @@ public class FgcStationService {
 
     public List<StationDTO> getStationsDTO() {
         //TODO 1: get all stations (see the returned type)
-        return null;
+        List<StationDTO> e = new ArrayList<>();
+        List<StationDTO> estaciones = e.stream()
+                .map(estacion -> new CStationDTO(estacion.getName(), estacion.getLongitud(), estacion.getLatitud()))
+                .collect(Collectors.toList());
+        return estaciones;
     }
 
     public List<Station> getStationsDomain() {
         //TODO 2: get all stations (see you return a domain Station). Actually you don't need to leave this file
         // in order to complete this exercise
-        return null;
+        List<Station> estaciones = stationRepository.findAll();
+        return estaciones;
     }
 
     public Station getStation(String name) {
         // TODO 3: get a station by name (see the returned type). If the station does not exist, throw a StationDoesNotExistsException
         //  you won't need to write any sql (jpql) query
-        return null;
+        return stationRepository.findByName(name)
+                .orElseThrow(() -> new StationDoesNotExistsException(name));
     }
 
     public StationDTO getStationDTO(String name) {
         // TODO 4: get a station by name (see the returned type). If the station does not exist, throw a StationDoesNotExistsException
-        return null;
+        Station estacion = getStation(name);
+        return new CStationDTO(estacion.getName(), estacion.getLongitud(), estacion.getLatitud());
     }
 
     public List<StationTopFavoriteJourney> getStationsOrderedByFavoriteJourneysAsEitherOriginOrDestination() {

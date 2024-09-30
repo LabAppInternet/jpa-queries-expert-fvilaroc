@@ -32,6 +32,8 @@ public class Journey {
     public Journey() {
     }
 
+    public JourneyId getjourneyId() { return id;}
+
     public Station getOrigin() {
         return origin;
     }
